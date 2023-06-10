@@ -1,0 +1,68 @@
+@startuml
+title deliveringonourpromise_CD
+
+package "com.amazon.ata.deliveringonourpromise" {
+    class App
+    class Shell
+
+    package "promisehistoryservice" {
+        class PromiseHistoryClient
+    }
+
+    package "activity" {
+        class GetPromiseHistoryByOrderIdActivity
+    }
+
+    package "dao" {
+        interface ReadOnlyDao
+        class OrderDao
+        class PromiseDao
+    }
+
+    package "ordermanipulationauthority" {
+        class OrderManipulationAuthorityClient
+    }
+
+    package "deliverypromiseservice" {
+        class DeliveryPromiseServiceClient
+    }
+
+    package "types" {
+        class Order
+        class OrderItem
+        class Promise
+        class PromiseHistory
+    }
+}
+
+App --> Shell
+Shell --> PromiseHistoryClient
+PromiseHistoryClient --> GetPromiseHistoryByOrderIdActivity
+GetPromiseHistoryByOrderIdActivity --> OrderDao
+GetPromiseHistoryByOrderIdActivity --> PromiseDao
+
+OrderDao ..|> ReadOnlyDao
+PromiseDao ..|> ReadOnlyDao
+OrderDao --> OrderManipulationAuthorityClient
+
+
+
+PromiseDao --> OrderManipulationAuthorityClient
+PromiseDao --> DeliveryPromiseServiceClient
+
+Order --> OrderItem
+PromiseHistory --> Promise
+PromiseHistory --> Order
+
+@enduml
+
+//*PromiseHistory contains Order and Promise.
+In a class diagram, the arrow direction signifies the flow of information or relationship, rather than control flow or order of operation.
+
+"PromiseHistory --> Order" and "PromiseHistory --> Promise" are intended to represent the relationships between these classes based on their respective responsibilities in the system. As you correctly noted, a PromiseHistory object is responsible for collecting and storing all promise-related data for all items in a particular order.
+
+This suggests that a PromiseHistory object has references to an Order object and one or more Promise objects. These relationships allow the PromiseHistory object to access the order and promise data as needed, which is why the arrows point from PromiseHistory to Order and Promise.
+
+On the other hand, if we were to reverse these arrows (e.g., "Order --> PromiseHistory", "Promise --> PromiseHistory"), this would suggest that Order objects and Promise objects hold references to a PromiseHistory object and can access its data, which is not consistent with the responsibilities described for these classes.
+
+In summary, the direction of the arrows represents the "**knows about**" relationship. In this case, PromiseHistory "knows about" Order and Promise, but not the other way around.
