@@ -60,17 +60,22 @@ public class Shell {
         Shell shell = new Shell(App.getPromiseHistoryClient(), new ATAUserHandler());
         shell.processCommandLineArgs(args);
 
-        try {
-            do {
+        do {
+            try {
                 System.out.println(shell.handleUserRequest());
-            } while (shell.userHasAnotherRequest());
-        } catch (Exception e) {
-            System.out.println("Error encountered. Exiting.");
-        }
+            } catch (Exception e) {
+                // existing: 900-3746402-0000002
+                // FIXME
+                System.out.println(UNKNOWN_ORDER_MESSAGE);
+            }
+        } while (shell.userHasAnotherRequest());
 
-        System.out.println("Thank you for using the Promise History CLI. Have a great day!\n\n");
+        System.out.println("Thank you for using the Promise History CLI. Have a great day!");
+
+            // Proposed: System.out.println(UNKNOWN_ORDER_MESSAGE);
+            // Proposed:  System.out.println(CONTINUE_PROMPT);
+            // Proposed:  System.out.println(shell.handleUserRequest());
     }
-
     /**
      * Handles a user request to fetch promise history for order IDs, and returns the text to display
      * to user.

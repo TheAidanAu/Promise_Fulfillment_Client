@@ -29,8 +29,8 @@ public class GetPromiseHistoryByOrderIdActivity {
     }
 
     /**
-     * Returns the PromiseHistory for the given order ID, if the order exists. If the order does
-     * not exist a PromiseHistory with a null order and no promises will be returned.
+     * Returns the PromiseHistory for the given order ID, if the order exists.
+     * If the order does not exist, a PromiseHistory with a null order and no promises will be returned.
      * @param orderId The order ID to fetch PromiseHistory for
      * @return PromiseHistory containing the order and promise history for that order
      */
@@ -40,6 +40,12 @@ public class GetPromiseHistoryByOrderIdActivity {
         }
 
         Order order = orderDao.get(orderId);
+
+        //Look at the OrderDao class, it validates if an orderId is valid
+        // if it's not, it returns a null object
+        if (order == null) {
+            return new PromiseHistory(null);
+        }
 
         List<OrderItem> customerOrderItems = order.getCustomerOrderItemList();
         OrderItem customerOrderItem = null;

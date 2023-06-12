@@ -35,9 +35,12 @@ public class PromiseHistory {
             throw new IllegalArgumentException("PromiseHistory cannot accept null Promises");
         }
 
-        if (order == null) {
-            throw new IllegalArgumentException("Promises cannot be added for a null order.");
-        }
+//        if (order == null) {
+//            throw new IllegalArgumentException("Promises cannot be added for a null order.");
+//        }
+        //if the order is null, or if the orderID is not valid, the promises Array is already empty
+        // previously with the 2 lines above, it throws and exception if an order is null,
+        // but this should be allowed, because the promises Array is already empty
         promises.add(newPromise);
     }
 
