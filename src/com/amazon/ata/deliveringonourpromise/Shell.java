@@ -72,9 +72,6 @@ public class Shell {
 
         System.out.println("Thank you for using the Promise History CLI. Have a great day!");
 
-            // Proposed: System.out.println(UNKNOWN_ORDER_MESSAGE);
-            // Proposed:  System.out.println(CONTINUE_PROMPT);
-            // Proposed:  System.out.println(shell.handleUserRequest());
     }
     /**
      * Handles a user request to fetch promise history for order IDs, and returns the text to display
