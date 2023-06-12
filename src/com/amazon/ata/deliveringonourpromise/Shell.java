@@ -70,7 +70,7 @@ public class Shell {
             }
         } while (shell.userHasAnotherRequest());
 
-        System.out.println("Thank you for using the Promise History CLI. Have a great day!");
+        System.out.println("Thank you for using the Promise History CLI. Have a great day! \n\n");
 
     }
     /**
