@@ -2,6 +2,7 @@ package com.amazon.ata.deliveringonourpromise.types;
 
 import com.amazon.ata.ordermanipulationauthority.OrderCondition;
 
+import java.lang.reflect.Array;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,15 +32,23 @@ import java.util.List;
  * * orderDate: the timestamp of when the order was placed
  */
 public class Order {
-    public String orderId;
-    public String customerId;
-    public String marketplaceId;
-    public OrderCondition condition;
-    public List<OrderItem> customerOrderItemList = new ArrayList<>();
-    public String shipOption;
-    public ZonedDateTime orderDate;
+    private String orderId;
+    private String customerId;
+    private String marketplaceId;
+    private OrderCondition condition;
+    private List<OrderItem> customerOrderItemList = new ArrayList<>();
+    private String shipOption;
+    private ZonedDateTime orderDate;
 
-    private Order() { }
+    private Order(Builder builder) {
+        this.orderId = builder.orderId;
+        this.customerId = builder.customerId;
+        this.marketplaceId = builder.marketplaceId;
+        this.condition = builder.condition;
+        this.customerOrderItemList = new ArrayList<>(builder.customerOrderItemList);
+        this.shipOption = builder.shipOption;
+        this.orderDate = builder.orderDate;
+    }
 
     /**
      * Returns a new Order.Builder object for constructing an Order.
@@ -71,7 +80,9 @@ public class Order {
      * @return a list containing all of the order items in this order
      */
     public List<OrderItem> getCustomerOrderItemList() {
-        return customerOrderItemList;
+        return new ArrayList<>(customerOrderItemList); //defensive copy
+        // The following line is shallow copy
+        // return customerOrderItemList;
     }
 
     public String getShipOption() {
@@ -137,7 +148,9 @@ public class Order {
          * @return updated Builder
          */
         public Builder withCustomerOrderItemList(List<OrderItem> customerOrderItemList) {
-            this.customerOrderItemList = customerOrderItemList;
+            this.customerOrderItemList = new ArrayList<>(customerOrderItemList); //defensive copy
+            // The following line is shallow copy
+            //this.customerOrderItemList = customerOrderItemList;
             return this;
         }
 
@@ -159,7 +172,7 @@ public class Order {
          * @return constructed Order object
          */
         public Order build() {
-            Order order = new Order();
+            Order order = new Order(this);
 
             order.orderId = orderId;
             order.customerId = customerId;
