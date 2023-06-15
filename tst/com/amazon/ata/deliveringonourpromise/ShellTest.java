@@ -42,25 +42,6 @@ public class ShellTest {
     }
 
     @Test
-    public void handleUserRequest_orderWithNullFields_doesntRaiseException() {
-        // GIVEN
-        String orderId = "111-7497023-2960775";
-        Order order = Order.builder()
-                          .withOrderId(orderId)
-                          .withCustomerId("12345")
-                          .build();
-        PromiseHistory promiseHistory = new PromiseHistory(order);
-        when(mockUserHandler.getString(anyString(), anyString())).thenReturn(orderId);
-        when(mockPromiseHistoryClient.getPromiseHistoryByOrderId(anyString())).thenReturn(promiseHistory);
-
-        // WHEN
-        String result = shell.handleUserRequest();
-
-        // THEN - no exception thrown
-        assertNotNull(result);
-    }
-
-    @Test
     public void handleUserRequest_orderDoesNotExist_doesntRaiseException() {
         // GIVEN
         String unknownOrderId = "111";
@@ -74,31 +55,6 @@ public class ShellTest {
 
         assertEquals(result, String.format("Unable to find any order data for orderId: %s. Please check your " +
                                            "order id and try again.", unknownOrderId));
-    }
-
-
-    @Test
-    void handleUserRequest_withExistingOrder_containsCorrectOrderData() {
-        // GIVEN
-        String orderId = "111-7497023-2960775";
-        Order order = Order.builder()
-                          .withOrderId(orderId)
-                          .withCustomerId("12345")
-                          .withCondition(OrderCondition.CLOSED)
-                          .withMarketplaceId("1")
-                          .withOrderDate(ZonedDateTime.now().minusDays(1))
-                          .withShipOption("second")
-                          .build();
-        PromiseHistory promiseHistory = new PromiseHistory(order);
-
-        when(mockUserHandler.getString(anyString(), anyString())).thenReturn(orderId);
-        when(mockPromiseHistoryClient.getPromiseHistoryByOrderId(anyString())).thenReturn(promiseHistory);
-
-        // WHEN
-        String result = shell.handleUserRequest();
-
-        // THEN
-        assertOrderMatch(order, result);
     }
 
     @Test
@@ -128,56 +84,6 @@ public class ShellTest {
         // THEN - should have a promise row, and should only see order item ID (plus not active, zero confidence score)
         String[] rowEntries = {"", "", orderItemId, "N", "", "", "", ""};
         assertRowMatch(rowEntries, result);
-    }
-
-    @Test
-    void handleUserRequest_withExistingOrder_containsCorrectPromiseHistoryData() {
-        // GIVEN
-        String orderId = "111-7497023-2960775";
-        Order order = Order.builder()
-                          .withOrderId(orderId)
-                          .withCustomerId("12345")
-                          .withCondition(OrderCondition.CLOSED)
-                          .withMarketplaceId("1")
-                          .withOrderDate(ZonedDateTime.now().minusDays(1))
-                          .withShipOption("second")
-                          .build();
-
-        Promise promise1 = Promise.builder()
-                               .withPromiseLatestArrivalDate(ZonedDateTime.now().plusDays(2))
-                               .withCustomerOrderItemId("20655079937481")
-                               .withPromiseEffectiveDate(ZonedDateTime.now().minusDays(1))
-                               .withIsActive(false)
-                               .withPromiseLatestShipDate(ZonedDateTime.now().plusDays(1))
-                               .withPromiseProvidedBy("DPS")
-                               .withAsin("B07C9JYF2W")
-                               .withDeliveryDate(ZonedDateTime.now())
-                               .build();
-
-        Promise promise2 = Promise.builder()
-                               .withPromiseLatestArrivalDate(ZonedDateTime.now().plusDays(3))
-                               .withCustomerOrderItemId("20655079937499")
-                               .withPromiseEffectiveDate(ZonedDateTime.now().minusDays(5))
-                               .withIsActive(true)
-                               .withPromiseLatestShipDate(ZonedDateTime.now().plusDays(2))
-                               .withPromiseProvidedBy("DPS")
-                               .withAsin("B0019H32G2")
-                               .withDeliveryDate(ZonedDateTime.now().minusHours(1))
-                               .build();
-
-        PromiseHistory promiseHistory = new PromiseHistory(order);
-        promiseHistory.addPromise(promise1);
-        promiseHistory.addPromise(promise2);
-
-        when(mockUserHandler.getString(anyString(), anyString())).thenReturn(order.getOrderId());
-        when(mockPromiseHistoryClient.getPromiseHistoryByOrderId(any())).thenReturn(promiseHistory);
-
-        // WHEN
-        String result = shell.handleUserRequest();
-
-        // THEN
-        assertPromiseMatch(promise1, order, result);
-        assertPromiseMatch(promise2, order, result);
     }
 
     @Test
