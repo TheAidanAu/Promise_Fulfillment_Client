@@ -36,7 +36,8 @@ public class Order {
     private String customerId;
     private String marketplaceId;
     private OrderCondition condition;
-    private List<OrderItem> customerOrderItemList = new ArrayList<>();
+    private List<OrderItem> customerOrderItemList;
+    // original: private List<OrderItem> customerOrderItemList = new ArrayList<>();
     private String shipOption;
     private ZonedDateTime orderDate;
 
