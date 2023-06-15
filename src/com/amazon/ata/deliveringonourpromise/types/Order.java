@@ -2,7 +2,7 @@ package com.amazon.ata.deliveringonourpromise.types;
 
 import com.amazon.ata.ordermanipulationauthority.OrderCondition;
 
-import java.lang.reflect.Array;
+// import java.lang.reflect.Array;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -80,7 +80,8 @@ public class Order {
      * @return a list containing all of the order items in this order
      */
     public List<OrderItem> getCustomerOrderItemList() {
-        return new ArrayList<>(customerOrderItemList); //defensive copy
+        //Use defensive copy instead
+        return new ArrayList<>(customerOrderItemList);
         // The following line is shallow copy
         // return customerOrderItemList;
     }
@@ -148,7 +149,8 @@ public class Order {
          * @return updated Builder
          */
         public Builder withCustomerOrderItemList(List<OrderItem> customerOrderItemList) {
-            this.customerOrderItemList = new ArrayList<>(customerOrderItemList); //defensive copy
+            //Use defensive copy instead
+            this.customerOrderItemList = new ArrayList<>(customerOrderItemList);
             // The following line is shallow copy
             //this.customerOrderItemList = customerOrderItemList;
             return this;
